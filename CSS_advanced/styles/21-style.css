@@ -189,7 +189,7 @@ ul.row{
     color: var(--nav-item-link-hover);
 }
 
-[class^="col"]{
+[class^="col-"]{
     float: left;
     padding: 0.5rem;
 }
