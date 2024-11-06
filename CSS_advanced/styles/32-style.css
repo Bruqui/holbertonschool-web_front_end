@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 :root{
     --color-primary: #D73953;
     --color-black: #090909;
@@ -259,6 +260,8 @@ ul.row{
     color: var(--button-hover-color);
     text-decoration: var(--button-hover-text-decoration);
     background-color: var(--button-hover-background);
+    transition-duration: var(--transition-duration);
+    transition-property: color, background-color;
 }
 
 .card-testimonial{
