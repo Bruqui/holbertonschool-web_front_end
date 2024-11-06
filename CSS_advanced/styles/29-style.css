@@ -101,7 +101,7 @@ a:active{
     color: var(--color-primary);
 }
 
-.section {
+.section{
     padding: var(--section-padding);
 }
 
@@ -110,11 +110,11 @@ a:active{
     padding: var(--section-header-padding);
 }
 
-.section-body {
+.section-body{
     padding: var(--section-body-padding);
 }
 
-.section-footer {
+.section-footer{
     padding: var(--section-footer-padding);
     text-align: var(--section-footer-align);
 }
@@ -171,7 +171,7 @@ ul.row{
     margin-right: auto;
 }
 
-.footer {
+.footer{
     padding: var(--footer-padding);
 }
 
@@ -209,6 +209,13 @@ ul.row{
     padding: 0.5rem;
 }
 
+[data-section-theme="dark"]{
+    --text-color: var(--color-white);
+    --section-title-color: var(--color-white);
+    background-color: var(--color-black);
+    --button-color: var(--color-white);
+}
+
 .footer-address{
     color: var(--text-color);
 }
@@ -218,14 +225,7 @@ ul.row{
 }
 
 .social-link > svg{
-    fill: var(--text-color)
-}
-
-[data-section-theme="dark"]{
-    --text-color: var(--color-white);
-    --section-title-color: var(--color-white);
-    background-color: var(--color-black);
-    --button-color: var(--color-white)
+    fill: var(--text-color);
 }
 
 .card-services .card-title{
@@ -312,7 +312,7 @@ ul.row{
     height: 0.2rem;
 }
 
-.nav .nav-link:hover .nav-link::before{
+.nav .nav-item:hover .nav-link::before{
     background-color: var(--color-primary);
     width: 100%;
 }
