@@ -1,4 +1,6 @@
-@use '103-sort_list' as List; // Import the file with a namespace
+/* that sorts the variable $list_to_sort and prints the sorted list in the debug output */
+
+@use '103-sort_list' as List;
 @use 'sass:list';
 @use "sass:string";
 $sort-order: a b c d e f g h i j k l m n o p q r s t u v w x y z !default;
@@ -42,5 +44,4 @@ $sort-order: a b c d e f g h i j k l m n o p q r s t u v w x y z !default;
   @return $list;
 }
 
-// Debug the sorted result for the imported list
 @debug sort(List.$list_to_sort, $sort-order);
