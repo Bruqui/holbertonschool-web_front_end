@@ -360,7 +360,7 @@ ul.row {
 .section-hero .section-inner {
     display: flex;
     flex-direction: column;
-    align-items: self-start;
+    align-items: flex-start;
     justify-content: center;
     min-height: 50vh;
 }
