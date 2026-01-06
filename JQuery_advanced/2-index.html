@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 2</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script type="application/javascript">
+        // Définition de la fonction createFamilyTree
+        function createFamilyTree() {
+            // Création de la structure complète du tableau dans une seule chaîne de caractères
+            var tableHTML = "<table>" +
+                "<thead>" +
+                "<tr>" +
+                "<th>Firstname</th>" +
+                "<th>Lastname</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>Guillaume</td>" +
+                "<td>Salva</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>Paulette</td>" +
+                "<td>Salva</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>Antoine</td>" +
+                "<td>Salva</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>";
+
+            // Utilisation de append une seule fois pour attacher tout le tableau au body
+            $("body").append(tableHTML);
+        }
+
+        // Appel de la fonction
+        createFamilyTree();
+    </script>
+</body>
+
+</html>
