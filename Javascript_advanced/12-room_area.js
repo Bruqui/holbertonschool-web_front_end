@@ -21,3 +21,5 @@ const roomDimensions = {
  */
 
 const boundGetArea = roomDimensions.getArea.bind(roomDimensions);
+
+console.log(boundGetArea());
