@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 9</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        /* Style pour la pagination */
+        #pagination {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+
+        /* Classe de chargement demandée */
+        .loading {
+            opacity: 0.2;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="application/javascript">
+        // Gestion de l'affichage de l'état "chargement"
+        function displayLoading(loading) {
+            var $ul = $('ul').first();
+            if (loading) {
+                // Enveloppe le ul dans une div avec la classe .loading
+                $ul.wrap('<div class="loading"></div>');
+            } else {
+                // Retire le parent direct (la div .loading)
+                $ul.unwrap();
+            }
+        }
+
+        function createSearchForm() {
+            var $input = $('<input type="text">');
+            var $submit = $('<input type="submit">').click(function () {
+                queryWikipedia($input.val());
+            });
+            var $resultsUl = $('<ul>');
+            var $paginationUl = $('<ul id="pagination">');
+
+            $('body').append($input, $submit, $resultsUl, $paginationUl);
+        }
+
+        function addNewArticle(id, title, snippet) {
+            var $li = $('<li>').append(
+                $('<p>').append(
+                    $('<span>').text(id + ' - '),
+                    $('<b>').text(title)
+                ),
+                $('<p>').html(snippet)
+            );
+            $('ul').first().append($li);
+        }
+
+        function queryWikipedia(search, offset = 0) {
+            var url = "https://en.wikipedia.org/w/api.php";
+
+            // On active l'effet visuel de chargement
+            displayLoading(true);
+
+            $.ajax({
+                url: url,
+                data: {
+                    action: "query",
+                    list: "search",
+                    srsearch: search,
+                    format: "json",
+                    origin: "*",
+                    sroffset: offset,
+                    srlimit: 10
+                },
+                success: function (response) {
+                    // On retire l'effet visuel une fois les données reçues
+                    displayLoading(false);
+
+                    $('ul').first().empty();
+
+                    response.query.search.forEach(function (article) {
+                        addNewArticle(article.pageid, article.title, article.snippet);
+                    });
+
+                    buildPagination(
+                        response.query.searchinfo.totalhits,
+                        10,
+                        offset
+                    );
+                }
+            });
+        }
+
+        function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+            $('#pagination').empty();
+            var totalPages = Math.ceil(numberOfItems / itemsPerPage);
+
+            for (var i = 1; i <= totalPages; i++) {
+                var offsetForPage = (i - 1) * itemsPerPage;
+
+                var $li = $('<li>')
+                    .text(i)
+                    .css({
+                        cursor: 'pointer',
+                        marginLeft: '10px',
+                        display: 'inline-block'
+                    })
+                    .click((function (offset) {
+                        return function () {
+                            queryWikipedia($('input').first().val(), offset);
+                        };
+                    })(offsetForPage));
+
+                if (currentOffset === offsetForPage) {
+                    $li.css('font-weight', 'bold');
+                }
+                $('#pagination').append($li);
+            }
+        }
+
+        $(document).ready(function () {
+            createSearchForm();
+        });
+    </script>
+</body>
+
+</html>
