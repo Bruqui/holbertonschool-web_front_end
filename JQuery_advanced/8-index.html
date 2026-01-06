@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 8</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        /* Style pour mettre la pagination en ligne */
+        #pagination {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="application/javascript">
+        // Création du formulaire et des listes
+        function createSearchForm() {
+            var $input = $('<input type="text">');
+            var $submit = $('<input type="submit">').click(function () {
+                queryWikipedia($input.val());
+            });
+            var $resultsUl = $('<ul>');
+            var $paginationUl = $('<ul id="pagination">');
+
+            $('body').append($input, $submit, $resultsUl, $paginationUl);
+        }
+
+        // Ajout d'un article à la liste
+        function addNewArticle(id, title, snippet) {
+            var $li = $('<li>').append(
+                $('<p>').append(
+                    $('<span>').text(id + ' - '),
+                    $('<b>').text(title)
+                ),
+                $('<p>').html(snippet)
+            );
+            $('ul').first().append($li);
+        }
+
+        // Requête Wikipedia avec gestion de l'offset
+        function queryWikipedia(search, offset = 0) {
+            var url = "https://en.wikipedia.org/w/api.php";
+
+            $.ajax({
+                url: url,
+                data: {
+                    action: "query",
+                    list: "search",
+                    srsearch: search,
+                    format: "json",
+                    origin: "*",
+                    sroffset: offset, // Position de départ des résultats
+                    srlimit: 10      // Nombre d'items par page
+                },
+                success: function (response) {
+                    // Vider les anciens résultats
+                    $('ul').first().empty();
+
+                    // Ajouter les nouveaux articles
+                    response.query.search.forEach(function (article) {
+                        addNewArticle(article.pageid, article.title, article.snippet);
+                    });
+
+                    // Générer la pagination
+                    buildPagination(
+                        response.query.searchinfo.totalhits,
+                        10,
+                        offset
+                    );
+                }
+            });
+        }
+
+        // Construction du menu de pagination
+        function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+            // Reset de la liste de pagination
+            $('#pagination').empty();
+
+            var totalPages = Math.ceil(numberOfItems / itemsPerPage);
+
+            // On limite souvent l'affichage pour éviter des milliers de chiffres
+            // Mais ici on suit la consigne d'une boucle simple
+            for (var i = 1; i <= totalPages; i++) {
+                var offsetForPage = (i - 1) * itemsPerPage;
+
+                var $li = $('<li>')
+                    .text(i)
+                    .css({
+                        cursor: 'pointer',
+                        marginLeft: '10px',
+                        display: 'inline-block' // Pour l'affichage horizontal
+                    })
+                    .click((function (offset) {
+                        return function () {
+                            queryWikipedia($('input').first().val(), offset);
+                        };
+                    })(offsetForPage)); // Utilisation d'une closure pour capturer l'offset
+
+                // Mise en gras de la page actuelle
+                if (currentOffset === offsetForPage) {
+                    $li.css('font-weight', 'bold');
+                }
+
+                $('#pagination').append($li);
+            }
+        }
+
+        $(document).ready(function () {
+            createSearchForm();
+        });
+    </script>
+</body>
+
+</html>
