@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 7</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script type="application/javascript">
+        // Crée le formulaire de recherche et la liste vide
+        function createSearchForm() {
+            var $input = $('<input type="text">');
+            var $submit = $('<input type="submit">').click(function () {
+                queryWikipedia($input.val());
+            });
+            var $ul = $('<ul>');
+
+            $('body').append($input, $submit, $ul);
+        }
+
+        // Ajoute un article à la liste ul
+        function addNewArticle(id, title, snippet) {
+            var $li = $('<li>').append(
+                $('<p>').append(
+                    $('<span>').text(id + ' - '),
+                    $('<b>').text(title)
+                ),
+                $('<p>').html(snippet) // .html() est utilisé car le snippet contient des balises HTML
+            );
+
+            $('ul').append($li);
+        }
+
+        // Interroge l'API Wikipedia
+        function queryWikipedia(search) {
+            var url = "https://en.wikipedia.org/w/api.php";
+
+            // Configuration de la requête AJAX
+            $.ajax({
+                url: url,
+                data: {
+                    action: "query",
+                    list: "search",
+                    srsearch: search,
+                    format: "json",
+                    origin: "*" // Nécessaire pour éviter les erreurs CORS
+                },
+                success: function (response) {
+                    // On vide la liste avant d'ajouter les nouveaux résultats
+                    $('ul').empty();
+
+                    // Parcours des résultats retournés par Wikipedia
+                    response.query.search.forEach(function (article) {
+                        addNewArticle(article.pageid, article.title, article.snippet);
+                    });
+                }
+            });
+        }
+
+        // Lancement au chargement de la page
+        $(document).ready(function () {
+            createSearchForm();
+        });
+    </script>
+</body>
+
+</html>
