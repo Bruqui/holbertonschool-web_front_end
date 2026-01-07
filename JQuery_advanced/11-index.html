@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task 11</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script type="application/javascript">
+        // Affiche une ligne pour un post (Réutilisé de la tâche 10)
+        function addPostRow(data) {
+            var text = "Post created with id " + data.id + ", title: " + data.title + ", author: " + data.author;
+            $('body').append(
+                $('<p>').append($('<span>').text(text))
+            );
+        }
+
+        // Liste les posts existants (Réutilisé de la tâche 10)
+        function listPosts() {
+            $.get("http://localhost:3000/posts", function (response) {
+                response.forEach(function (post) {
+                    addPostRow(post);
+                });
+            }).fail(function () {
+                alert("Server Error");
+            });
+        }
+
+        // Construit le formulaire d'ajout
+        function buildForm() {
+            var $form = $('<form>');
+
+            // Champ Author
+            var $authorDiv = $('<div>').append(
+                $('<label for="author">Author</label>'),
+                $('<input type="text" id="author">')
+            );
+
+            // Champ Title
+            var $titleDiv = $('<div>').append(
+                $('<label for="title">Title</label>'),
+                $('<textarea id="title"></textarea>')
+            );
+
+            var $submit = $('<input type="submit">');
+
+            $form.append($authorDiv, $titleDiv, $submit);
+
+            // Gestion de la soumission du formulaire
+            $form.on('submit', function (e) {
+                e.preventDefault(); // Empêche le rechargement de la page
+                sendForm();
+            });
+
+            $('body').prepend($form); // On place le formulaire en haut
+        }
+
+        // Envoie les données au serveur via POST
+        function sendForm() {
+            // Ajout du message informatif après le formulaire
+            $('form').after('<p>About to send the query to the API</p>');
+
+            // Préparation des données
+            var data = {
+                author: $('#author').val(),
+                title: $('#title').val()
+            };
+
+            // Envoi de la requête POST
+            $.post("http://localhost:3000/posts", data, function (response) {
+                addPostRow(response);
+            }).fail(function () {
+                alert("Error sending the POST query");
+            });
+        }
+
+        // Chargement initial
+        $(document).ready(function () {
+            listPosts();
+            buildForm();
+        });
+    </script>
+</body>
+
+</html>
